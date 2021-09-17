@@ -1,1 +1,6 @@
-test
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Привет, Мир!</h1>
+<a href="{% url 'login' %}">Войти в профиль пользователя</a>
+{% endblock %}

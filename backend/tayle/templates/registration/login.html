@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-md-center">
+  <div class="mt-4 col-4">
+    {% if form.errors %}
+    <div class="mb-4 alert alert-danger" role="alert">
+      Логин или пароль некорректные. Попробуйте ввести заново.
+    </div>
+    {% endif %}
+
+    <form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+      <div class="form-group">
+        <label for="id_username">{{ form.username.label_tag }}</label>
+        <input class="form-control" type="text" name="username" value="" autofocus required id="id_username">
+      </div>
+      <div class="form-group">
+        <label for="id_password">{{ form.password.label_tag }}</label>
+        <input class="form-control" type="password" name="password" required id="id_password">
+      </div>
+      <input class="btn btn-primary" type="submit" value="Авторизоваться" />
+      <input type="hidden" name="next" value="{{ next }}" />
+    </form>
+  </div>
+</div>
+{% endblock %}
