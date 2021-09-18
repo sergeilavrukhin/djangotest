@@ -1,0 +1,105 @@
+{% extends "profile_sidebar.html" %}
+{% block title %}Профиль пользователя{% endblock %}
+
+{% if user.is_authenticated %}
+  {% block content %}
+<div class="row mt-3" xmlns:account.get_id>
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          Кому отправить?
+        </div>
+        <div class="card-body">
+          <form method="get">
+            <div class="form-group">
+              <label for="id_query">{{ form.query.label_tag }}</label>
+              {{ form.query }}
+            </div>
+            <div class="form-group">
+              <input class="btn btn-primary" type="submit" value="Найти счет" />
+            </div>
+          </form>
+          {% if error %}
+          <div class="mb-4 alert alert-danger" role="alert">
+            {{ error }}
+          </div>
+          {% endif %}
+          <form method="post">
+            {% csrf_token %}
+            <h5>Выбрать счет получателя</h5>
+            {% if accounts_recipient_list %}
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Счет</th>
+                  <th scope="col">Пользователь</th>
+                  <th scope="col">Выбрать</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for account in accounts_recipient_list %}
+                  <tr>
+                    <th scope="row">{{ account.get_id }}</th>
+                    <td>{{ account.user }} </td>
+                    <td>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" value="{{ account.get_id }}"
+                               {% if request.POST.account_recipient == account.get_id|stringformat:"i" %} checked{% endif %}
+                               name="account_recipient" id="account_recipient">
+                      </div>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            {% else %}
+              <div class="mb-4 alert alert-warning" role="alert">
+                Счета получателя по вашему запросу не найдены
+              </div>
+            {% endif %}
+            {{ sender_list }}
+            <h5>Выбрать счета отправителя</h5>
+            {% if accounts_sender_list %}
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Счет</th>
+                  <th scope="col">Пользователь</th>
+                  <th scope="col">Сумма</th>
+                  <th scope="col">Выбрать</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for account in accounts_sender_list %}
+                  <tr>
+                    <th scope="row">{{ account.get_id }}</th>
+                    <td>{{ account.user }}</td>
+                    <td>{{ account.sum }}</td>
+                    <td>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="{{ account.get_id }}"
+                               {% if account.get_id|stringformat:"i" in sender_list %} checked{% endif %}
+                                name="account_sender" id="account_sender">
+                      </div>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            {% else %}
+              <div class="mb-4 alert alert-warning" role="alert">
+                У вас нет ни одного счета
+              </div>
+            {% endif %}
+            <div class="form-group">
+              <label for="id_sum">Сумма которую хотите перевести</label>
+              <input class="form-control" type="text" name="sum" value="0" autofocus required id="id_sum" style="max-width: 200px;">
+            </div>
+            <input class="btn btn-primary" type="submit" value="Перевести" />
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+{% endif %}

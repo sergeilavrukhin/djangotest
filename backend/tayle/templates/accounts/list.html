@@ -31,10 +31,10 @@
             <tbody>
               {% for account in accounts_list.qs %}
                 <tr>
-                  <th scope="row">{{ account }}</th>
+                  <th scope="row">{{ account.get_id }}</th>
                   <td>{{ account.sum }}</td>
                   <td>{{ account.get_status_display }}</td>
-                  <td><a href="{% url 'account_one' id=account %}">Посмотреть информацию о счете</a></td>
+                  <td><a href="{% url 'account_detail' id=account %}">Посмотреть информацию о счете</a></td>
                 </tr>
               {% endfor %}
             </tbody>

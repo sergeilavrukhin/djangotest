@@ -20,7 +20,10 @@ class AccountList(models.Model):
     sum = models.FloatField(null=False, blank=False)
 
     def __str__(self):
-        return "{}".format(self._id)
+        return "{} {}".format(self._id, self.user)
+
+    def get_id(self):
+        return self._id
 
     class Meta:
         db_table = 'account_list'

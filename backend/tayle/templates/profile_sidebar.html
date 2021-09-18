@@ -29,13 +29,13 @@
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                   <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'accounts_list'%}">Мои счета</a>
+                    <a class="nav-link active" href="{% url 'accounts_list' %}">Мои счета</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="#">Движения по счетам</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#">Перевести деньги</a>
+                    <a class="nav-link" href="{% url 'account_send' %}">Перевести деньги</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="{% url 'logout'%}?next=/accounts/login/">Выйти</a>
