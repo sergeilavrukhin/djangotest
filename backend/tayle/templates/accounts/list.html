@@ -34,7 +34,7 @@
                   <th scope="row">{{ account.get_id }}</th>
                   <td>{{ account.sum }}</td>
                   <td>{{ account.get_status_display }}</td>
-                  <td><a href="{% url 'account_detail' id=account %}">Посмотреть информацию о счете</a></td>
+                  <td><a href="{% url 'account_detail' id=account.get_id %}">Посмотреть информацию о счете</a></td>
                 </tr>
               {% endfor %}
             </tbody>

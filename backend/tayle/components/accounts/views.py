@@ -16,7 +16,10 @@ def accounts_list(request):
 
 @login_required
 def account_detail(request, id):
-    account = AccountList.objects.get(_id=id)
+    try:
+        account = AccountList.objects.get(_id=id, user=request.user)
+    except:
+        account = None
     return render(request, 'accounts/detail.html', {'account': account})
 
 @login_required
@@ -25,11 +28,14 @@ def account_send(request):
     sender_list = None
     if request.method == 'POST':
         recipient = None
-        print(request.POST)
         if 'account_recipient' in request.POST:
             if 'account_sender' in request.POST:
                 sender_list = request.POST.getlist('account_sender')
-                if float(request.POST['sum']) > 0:
+                try:
+                    sum = float(request.POST['sum'])
+                except:
+                    sum = 0
+                if sum > 0:
                     recipient = AccountList.objects.get(_id=request.POST['account_recipient'])
                 else:
                     error = 'Введите сумму, которую необходимо перевести'

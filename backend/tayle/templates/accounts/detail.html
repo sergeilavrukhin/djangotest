@@ -16,6 +16,7 @@
           Мои счета
         </div>
         <div class="card-body">
+          {% if account %}
           <dl>
             <dt>Счет</dt>
             <dd>{{ account.get_id }}</dd>
@@ -26,6 +27,9 @@
             <dt>Статус</dt>
             <dd>{{ account.get_status_display }}</dd>
           </dl>
+          {% else %}
+          Счет недоступен
+          {% endif %}
         </div>
       </div>
     </div>

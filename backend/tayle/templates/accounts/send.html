@@ -10,6 +10,7 @@
           Кому отправить?
         </div>
         <div class="card-body">
+          <h5>Найти счет получателя</h5>
           <form method="get">
             <div class="form-group">
               <label for="id_query">{{ form.query.label_tag }}</label>
@@ -57,8 +58,7 @@
                 Счета получателя по вашему запросу не найдены
               </div>
             {% endif %}
-            {{ sender_list }}
-            <h5>Выбрать счета отправителя</h5>
+            <h5>Выбрать счета с которых хотите отправить средства</h5>
             {% if accounts_sender_list %}
             <table class="table">
               <thead>
@@ -93,7 +93,7 @@
             {% endif %}
             <div class="form-group">
               <label for="id_sum">Сумма которую хотите перевести</label>
-              <input class="form-control" type="text" name="sum" value="0" autofocus required id="id_sum" style="max-width: 200px;">
+              <input class="form-control" type="text" name="sum" value="{{ request.POST.sum }}" autofocus required id="id_sum" style="max-width: 200px;">
             </div>
             <input class="btn btn-primary" type="submit" value="Перевести" />
           </form>
