@@ -1,10 +1,61 @@
-{% extends "base.html" %}
+{% extends "profile_sidebar.html" %}
+{% block title %}Профиль пользователя{% endblock %}
 
-{% block content %}
-  {% if user.is_authenticated %}
-    <li>User: {{ user.get_username }}</li>
-    <li><a href="{% url 'logout'%}?next=/accounts/login/">Выйти</a></li>
-  {% else %}
-    <li><a href="{% url 'login'%}?next={{request.path}}">Войти</a></li>
-  {% endif %}
-{% endblock %}
+{% if user.is_authenticated %}
+  {% block content %}
+  <div class="row mt-3">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          Ваш баланс
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Баланс на всех счетах: {{ balans }}р.</h5>
+          <a href="{% url 'accounts_list'%}" class="btn btn-primary">Посмотреть счета</a>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          Движения по счетам
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Последние 5 движений по счетам</h5>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Счет</th>
+                <th scope="col">Кому</th>
+                <th scope="col">Сумма</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>3</td>
+                <td>Петя</td>
+                <td>15000р.</td>
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>4</td>
+                <td>Вася</td>
+                <td>10000р.</td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>15</td>
+                <td>Коля</td>
+                <td>100р.</td>
+              </tr>
+            </tbody>
+          </table>
+          <a href="#" class="btn btn-primary">Посмотреть все движения</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+{% endif %}

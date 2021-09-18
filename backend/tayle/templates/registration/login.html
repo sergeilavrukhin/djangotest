@@ -3,6 +3,11 @@
 {% block content %}
 <div class="row justify-content-md-center">
   <div class="mt-4 col-4">
+    {% if next %}
+    <div class="mb-4 alert alert-warning" role="alert">
+      Для просмотра этой страницы необходимо войти в профиль
+    </div>
+    {% endif %}
     {% if form.errors %}
     <div class="mb-4 alert alert-danger" role="alert">
       Логин или пароль некорректные. Попробуйте ввести заново.

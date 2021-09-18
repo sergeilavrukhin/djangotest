@@ -1,0 +1,47 @@
+{% extends "profile_sidebar.html" %}
+{% block title %}Профиль пользователя{% endblock %}
+
+{% if user.is_authenticated %}
+  {% block content %}
+  <div class="row mt-3">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          Мои счета
+        </div>
+        <div class="card-body">
+          <form method="get">
+            <div class="form-group">
+              <label for="id_status">{{ accounts_list.form.status.label_tag }}</label>
+              {{ accounts_list.form.status }}
+            </div>
+            <div class="form-group">
+              <input class="btn btn-primary" type="submit" value="Фильтровать" />
+            </div>
+          </form>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Счет</th>
+                <th scope="col">Сумма</th>
+                <th scope="col">Состояние</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for account in accounts_list.qs %}
+                <tr>
+                  <th scope="row">{{ account }}</th>
+                  <td>{{ account.sum }}</td>
+                  <td>{{ account.get_status_display }}</td>
+                  <td><a href="{% url 'account_one' id=account %}">Посмотреть информацию о счете</a></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+{% endif %}

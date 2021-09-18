@@ -9,6 +9,7 @@ services:
     container_name: tayle_app
     environment:
       - TZ=Asia/Yekaterinburg
+      - DJANGO_SETTINGS_MODULE=tayle.settings
     restart: always
     command: gunicorn tayle.wsgi:application --bind 0.0.0.0:5445
     volumes:
