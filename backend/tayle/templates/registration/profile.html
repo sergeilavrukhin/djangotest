@@ -10,7 +10,11 @@
           Ваш баланс
         </div>
         <div class="card-body">
-          <h5 class="card-title">Баланс на всех счетах: {{ balans }}р.</h5>
+          {% if balance %}
+          <h5 class="card-title">Баланс на всех счетах: {{ balance }}р.</h5>
+          {% else %}
+          <h5 class="card-title">У вас нет ни одного счета(Создаются админом)</h5>
+          {% endif %}
           <a href="{% url 'accounts_list'%}" class="btn btn-primary">Посмотреть счета</a>
         </div>
       </div>
@@ -25,34 +29,22 @@
           <table class="table">
             <thead>
               <tr>
-                <th scope="col">#</th>
                 <th scope="col">Счет</th>
-                <th scope="col">Кому</th>
                 <th scope="col">Сумма</th>
+                <th scope="col">Дата и время</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>3</td>
-                <td>Петя</td>
-                <td>15000р.</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>4</td>
-                <td>Вася</td>
-                <td>10000р.</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>15</td>
-                <td>Коля</td>
-                <td>100р.</td>
-              </tr>
+              {% for movement in account_movements %}
+                <tr>
+                  <th scope="row">{{ movement.account.get_id }}</th>
+                  <td>{% if movement.type == 'debited' %}-{% endif %}{{ movement.sum }}</td>
+                  <td>{{ movement.date_created }} {{ movement.time_created }}</td>
+                </tr>
+              {% endfor %}
             </tbody>
           </table>
-          <a href="#" class="btn btn-primary">Посмотреть все движения</a>
+          <a href="{% url 'account_movements' %}" class="btn btn-primary">Посмотреть все движения</a>
         </div>
       </div>
     </div>

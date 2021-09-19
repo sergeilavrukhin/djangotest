@@ -20,5 +20,5 @@ migrate:
 makemigrations:
 	@docker-compose -f docker-compose.yml exec backend python manage.py makemigrations -v 3 $(c)
 
-createsuperuser:
+superuser:
 	@docker-compose -f docker-compose.yml exec backend python manage.py createsuperuser --email=root@localhost

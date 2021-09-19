@@ -22,7 +22,7 @@
           </form>
           {% if error %}
           <div class="mb-4 alert alert-danger" role="alert">
-            {{ error }}
+            {{ error|safe }}
           </div>
           {% endif %}
           <form method="post">
@@ -65,7 +65,7 @@
                 <tr>
                   <th scope="col">Счет</th>
                   <th scope="col">Пользователь</th>
-                  <th scope="col">Сумма</th>
+                  <th scope="col">Баланс</th>
                   <th scope="col">Выбрать</th>
                 </tr>
               </thead>
@@ -74,11 +74,11 @@
                   <tr>
                     <th scope="row">{{ account.get_id }}</th>
                     <td>{{ account.user }}</td>
-                    <td>{{ account.sum }}</td>
+                    <td>{{ account.balance }}</td>
                     <td>
                       <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="{{ account.get_id }}"
-                               {% if account.get_id|stringformat:"i" in sender_list %} checked{% endif %}
+                               {% if account.get_id|stringformat:"i" in sender_ids_list %} checked{% endif %}
                                 name="account_sender" id="account_sender">
                       </div>
                     </td>

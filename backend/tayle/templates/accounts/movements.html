@@ -1,0 +1,71 @@
+{% extends "profile_sidebar.html" %}
+{% block title %}Профиль пользователя{% endblock %}
+
+{% if user.is_authenticated %}
+  {% block content %}
+  <div class="row mt-3">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          Мои счета
+        </div>
+        <div class="card-body">
+          <form method="get">
+            <div class="form-group">
+              <label for="id_type">{{ form.type.label_tag }}</label>
+              {{ form.type }}
+            </div>
+            <div class="form-group">
+              <label for="id_type">{{ form.sum.label_tag }}</label>
+              {{ form.sum }}
+            </div>
+            <div class="form-group">
+              <label for="id_type">{{ form.date_created.label_tag }}</label>
+              {{ form.date_created }}
+            </div>
+            <div class="form-group">
+              <input class="btn btn-primary" type="submit" value="Фильтровать" />
+            </div>
+          </form>
+          <center>
+          <nav aria-label="Page navigation example">
+            <ul class="pagination">
+              {% if account_movements.has_previous %}
+                <li class="page-item"><a class="page-link" href="?{{params}}&page={{ account_movements.previous_page_number }}">&laquo;</a></li>
+              {% endif %}
+              {% for n in account_movements.paginator.page_range %}
+                {% if n > account_movements.number|add:-4 and n < account_movements.number|add:4 %}
+                  <li class="page-item {% if n == account_movements.number %}active{% else %}no-active{% endif %}">
+                    <a class="page-link" href="?{{params}}&page={{ n }}">{{ n }}</a>
+                  </li>
+                {% endif %}
+              {% endfor %}
+              {% if account_movements.has_next %}
+                <li class="page-item"><a class="page-link" href="?{{params}}&page={{ account_movements.next_page_number }}">&raquo;</a></li>
+              {% endif %}
+            </ul>
+          </nav>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Счет</th>
+                <th scope="col">Сумма</th>
+                <th scope="col">Дата и время</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for movement in account_movements %}
+                <tr>
+                  <th scope="row">{{ movement.account.get_id }}</th>
+                  <td>{% if movement.type == 'debited' %}-{% endif %}{{ movement.sum }}</td>
+                  <td>{{ movement.date_created }} {{ movement.time_created }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+{% endif %}

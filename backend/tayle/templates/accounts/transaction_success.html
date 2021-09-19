@@ -5,28 +5,9 @@
   {% block content %}
   <div class="row mt-3">
     <div class="col">
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'accounts_list' %}">Счета</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Информация о счете {{ account }}</li>
-        </ol>
-      </nav>
-      <div class="card">
-        <div class="card-header">
-          Мои счета
-        </div>
-        <div class="card-body">
-          <dl>
-            <dt>Счет</dt>
-            <dd>{{ account.get_id }}</dd>
-            <dt>Сумма</dt>
-            <dd>{{ account.sum }}</dd>
-            <dt>Валюта</dt>
-            <dd>{{ account.get_currency_display }}</dd>
-            <dt>Статус</dt>
-            <dd>{{ account.get_status_display }}</dd>
-          </dl>
-        </div>
+      <div class="">
+        Перевод совершен успешно<br />
+        <a href="{% url 'account_send' %}">Совершить другой перевод</a>
       </div>
     </div>
   </div>

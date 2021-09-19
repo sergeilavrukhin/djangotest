@@ -21,26 +21,28 @@
         {% if user.is_authenticated %}
           {% block sidebar %}
             <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
-              <a class="navbar-brand" href="#">{{ user.get_username }}</a>
+              <a class="navbar-brand" href="{% url 'profile' %}">{{ user.get_username }}</a>
               <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
 
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                  <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'accounts_list' %}">Мои счета</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">Движения по счетам</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'account_send' %}">Перевести деньги</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logout'%}?next=/accounts/login/">Выйти</a>
-                  </li>
-                </ul>
+                {% with request.resolver_match.url_name as url_name %}
+                  <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                      <a class="nav-link{% if url_name == 'accounts_list' %} active{% endif %}" href="{% url 'accounts_list' %}">Мои счета</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link{% if url_name == 'account_movements' %} active{% endif %}" href="{% url 'account_movements' %}">Движения по счетам</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link{% if url_name == 'account_send' %} active{% endif %}" href="{% url 'account_send' %}">Перевести деньги</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'logout'%}?next=/accounts/login/">Выйти</a>
+                    </li>
+                  </ul>
+                {% endwith %}
               </div>
             </nav>
           {% endblock %}

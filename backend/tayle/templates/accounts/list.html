@@ -23,7 +23,7 @@
             <thead>
               <tr>
                 <th scope="col">Счет</th>
-                <th scope="col">Сумма</th>
+                <th scope="col">Баланс</th>
                 <th scope="col">Состояние</th>
                 <th scope="col"></th>
               </tr>
@@ -32,7 +32,7 @@
               {% for account in accounts_list.qs %}
                 <tr>
                   <th scope="row">{{ account.get_id }}</th>
-                  <td>{{ account.sum }}</td>
+                  <td>{{ account.balance }}</td>
                   <td>{{ account.get_status_display }}</td>
                   <td><a href="{% url 'account_detail' id=account.get_id %}">Посмотреть информацию о счете</a></td>
                 </tr>
