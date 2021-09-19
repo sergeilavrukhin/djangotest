@@ -2,11 +2,12 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.core.paginator import Paginator
+from rest_framework import generics
 
 from .models import AccountList, AccountMovements
 from .filters import AccountListFilter, AccountMovementsFilter
 from .forms import AccountSearchForm
-
+from .serializers import AccountListSerializer
 
 
 @login_required
@@ -14,24 +15,29 @@ def accounts_list(request):
     accounts_list = AccountListFilter(request.GET, queryset=AccountList.objects.filter(user=request.user).all())
     return render(request, 'accounts/list.html', {'accounts_list': accounts_list})
 
+
 @login_required
 def account_movements(request):
-    filter = AccountMovementsFilter(request.GET, queryset=AccountMovements.objects.filter(account__in=set(AccountList.objects.filter(user=request.user).all())).order_by("time_created").all())
+    filter = AccountMovementsFilter(request.GET, queryset=AccountMovements.objects.filter(
+        account__in=set(AccountList.objects.filter(user=request.user).all())).order_by("time_created").all())
 
     paginator = Paginator(filter.qs, 5)
     page = request.GET.get('page', 1)
     account_movements = paginator.get_page(page)
 
-    params = "type={}&sum={}&date_created_day={}&date_created_month={}&date_created_year={}"\
-        .format(request.GET.get("type", ""), request.GET.get("sum", ""), request.GET.get("date_created_day", ""), request.GET.get("date_created_month", ""),request.GET.get("date_created_year", ""))
+    params = "type={}&sum={}&date_created_day={}&date_created_month={}&date_created_year={}" \
+        .format(request.GET.get("type", ""), request.GET.get("sum", ""), request.GET.get("date_created_day", ""),
+                request.GET.get("date_created_month", ""), request.GET.get("date_created_year", ""))
 
-    return render(request, 'accounts/movements.html', {'form': filter.form, 'account_movements': account_movements, 'params': params})
+    return render(request, 'accounts/movements.html',
+                  {'form': filter.form, 'account_movements': account_movements, 'params': params})
+
 
 @login_required
 def account_detail(request, id):
     try:
         account = AccountList.objects.get(_id=id, user=request.user)
-    except:
+    except ValueError:
         account = None
     return render(request, 'accounts/detail.html', {'account': account})
 
@@ -39,9 +45,9 @@ def account_detail(request, id):
 @login_required
 def account_send(request):
     error = ""
+    sum_account = 0
     sender_ids_list = None
     if request.method == 'POST':
-        recipient = None
         if ('account_recipient' in request.POST) is False:
             error += 'Выберите счет получателя<br />'
 
@@ -50,7 +56,7 @@ def account_send(request):
 
         try:
             sum = float(request.POST['sum'])
-        except:
+        except ValueError:
             sum = 0
 
         if sum <= 0:
@@ -83,7 +89,7 @@ def account_send(request):
                                                              sum=sum_account, type='debited')
                 account_movements_debited.save()
                 account_movements_credited = AccountMovements(account=account_recipient, related_account=account_sender,
-                                                             sum=sum_account, type='credited')
+                                                              sum=sum_account, type='credited')
                 account_movements_credited.save()
 
             return render(request, 'accounts/transaction_success.html')
@@ -92,9 +98,10 @@ def account_send(request):
     if 'query' in request.GET:
         form = AccountSearchForm(request.GET)
         try:
-            accounts_recipient_list = AccountList.objects.filter(~Q(user=request.user),
-                                                                 Q(_id=int(request.GET["query"]))).all()
-        except:
+            accounts_recipient_list = AccountList.objects.filter(
+                ~Q(user=request.user),
+                Q(_id=int(request.GET["query"]))).all()
+        except ValueError:
             accounts_recipient_list = None
     else:
         accounts_recipient_list = AccountList.objects.filter(~Q(user=request.user)).all()
@@ -104,3 +111,8 @@ def account_send(request):
     return render(request, 'accounts/send.html', {'error': error, 'form': form, 'sender_ids_list': sender_ids_list,
                                                   'accounts_sender_list': accounts_sender_list,
                                                   'accounts_recipient_list': accounts_recipient_list})
+
+
+class AccountListDRF(generics.ListCreateAPIView):
+    queryset = AccountList.objects.all()
+    serializer_class = AccountListSerializer

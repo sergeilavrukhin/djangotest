@@ -1,3 +1,4 @@
 Django==2.2.8
+djangorestframework==v3.11.1
 django-filter==2.4.0
 gunicorn==20.0.4
