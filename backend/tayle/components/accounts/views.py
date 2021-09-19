@@ -77,17 +77,23 @@ def account_send(request):
                     error += "На счете {} недостаточно средств для перевода<br />".format(sender_id)
 
         if error == "":
+            # Пополнение баланса получателя
             account_recipient = AccountList.objects.get(_id=request.POST['account_recipient'])
             account_recipient.balance = account_recipient.balance + sum
             account_recipient.save()
             for sender_id in sender_ids_list:
+
+                # Снятие со счета необходимой суммы
                 account_sender = AccountList.objects.get(_id=sender_id)
                 account_sender.balance = account_sender.balance - sum_account
                 account_sender.save()
 
+                # Движение-списание со счета отправителя на счет получателя
                 account_movements_debited = AccountMovements(account=account_sender, related_account=account_recipient,
                                                              sum=sum_account, type='debited')
                 account_movements_debited.save()
+
+                # Движение-зачисление на счет получателя со счета отправителя
                 account_movements_credited = AccountMovements(account=account_recipient, related_account=account_sender,
                                                               sum=sum_account, type='credited')
                 account_movements_credited.save()
